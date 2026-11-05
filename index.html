@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CTRL//Z — The Last Save</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body data-screen="title">
+    <canvas id="game"></canvas>
+    <div id="scan" aria-hidden="true"></div>
+    <div id="ui">
+      <section class="panel panel-title" data-panel="title">
+        <p class="eyebrow">SIMULATION 07 — UNSTABLE</p>
+        <h1 class="wordmark">CTRL<span class="slash">//</span>Z</h1>
+        <p class="subtitle">THE LAST SAVE</p>
+        <p class="tag">Record. Rewind. Cooperate with your past.</p>
+        <nav class="menu" aria-label="Main">
+          <button type="button" data-action="play" class="menu-btn">Play</button>
+          <button type="button" data-action="select" class="menu-btn">Level select</button>
+          <button type="button" data-action="controls" class="menu-btn">Controls</button>
+          <button type="button" data-action="settings" class="menu-btn">Settings</button>
+        </nav>
+        <p class="foot"><span id="title-progress">0 / 5 CLEARED</span><span>LOCAL BOARD</span></p>
+      </section>
+
+      <section class="panel panel-select" data-panel="select">
+        <header class="panel-head">
+          <p class="eyebrow">TIMELINES</p>
+          <h2>Choose a save</h2>
+        </header>
+        <div class="cards" id="cards"></div>
+        <div class="board">
+          <p class="eyebrow">LOCAL LEADERBOARD</p>
+          <ol id="board"></ol>
+        </div>
+        <button type="button" data-action="back" class="text-btn">Back</button>
+      </section>
+
+      <section class="panel panel-controls" data-panel="controls">
+        <header class="panel-head">
+          <p class="eyebrow">INPUT</p>
+          <h2>How time works</h2>
+        </header>
+        <div class="cols">
+          <ul class="keys">
+            <li><kbd>A</kbd><kbd>D</kbd><span>Move</span></li>
+            <li><kbd>Space</kbd><span>Jump. Hold for height. Jump again to double jump.</span></li>
+            <li><kbd>Shift</kbd><span>Dash. Phase dash later cuts through lasers.</span></li>
+            <li><kbd>J</kbd><span>Pulse blade, once the level allows it.</span></li>
+            <li><kbd>Q</kbd><span>Drop an anchor. Z returns you here.</span></li>
+            <li><kbd>Z</kbd><span>Rewind. An echo replays what you just did.</span></li>
+            <li><kbd>X</kbd><span>Dismiss every echo.</span></li>
+            <li><kbd>R</kbd><span>Restart the level.</span></li>
+            <li><kbd>Esc</kbd><span>Pause.</span></li>
+            <li><kbd>M</kbd><span>Mute.</span></li>
+          </ul>
+          <div class="explain">
+            <p>Stand on a plate and press Z. You snap back to the anchor. The echo walks your route and holds the plate.</p>
+            <p>Echoes are recordings, not a second simulation. They do not drift, and lasers do not touch them.</p>
+            <p>Gates stay shut until every required plate is held. The exit portal tells you when the timeline agrees.</p>
+          </div>
+        </div>
+        <button type="button" data-action="back" class="text-btn">Back</button>
+      </section>
+
+      <section class="panel panel-settings" data-panel="settings">
+        <header class="panel-head">
+          <p class="eyebrow">SIGNAL</p>
+          <h2>Settings</h2>
+        </header>
+        <label class="slider">Music <input id="music" type="range" min="0" max="100" value="70" /></label>
+        <label class="slider">Effects <input id="sfx" type="range" min="0" max="100" value="85" /></label>
+        <label class="check"><input id="mute" type="checkbox" /> Mute</label>
+        <label class="check"><input id="shake" type="checkbox" checked /> Screen shake</label>
+        <label class="field">Callsign <input id="name" maxlength="12" value="SAVER" autocomplete="off" /></label>
+        <button type="button" data-action="settings-back" class="text-btn">Back</button>
+      </section>
+
+      <section class="panel panel-pause" data-panel="pause">
+        <div class="modal">
+          <p class="eyebrow">PAUSED</p>
+          <h2 id="pause-name">THE BREACH</h2>
+          <nav class="menu">
+            <button type="button" data-action="resume" class="menu-btn">Resume</button>
+            <button type="button" data-action="restart" class="menu-btn">Restart</button>
+            <button type="button" data-action="settings" class="menu-btn">Settings</button>
+            <button type="button" data-action="quit" class="menu-btn">Quit</button>
+          </nav>
+        </div>
+      </section>
+
+      <section class="panel panel-done" data-panel="done">
+        <div class="modal modal-done">
+          <p class="eyebrow" id="done-key">01 CLEARED</p>
+          <h2 id="done-name">THE BREACH</h2>
+          <p class="rank" id="done-rank">S</p>
+          <dl class="stats">
+            <div><dt>Time</dt><dd id="done-time">00:00.00</dd></div>
+            <div><dt>Best</dt><dd id="done-best">00:00.00</dd></div>
+            <div><dt>Score</dt><dd id="done-score">0</dd></div>
+            <div><dt>Shards</dt><dd id="done-shards">0/0</dd></div>
+            <div><dt>Deaths</dt><dd id="done-deaths">0</dd></div>
+            <div><dt>Combo</dt><dd id="done-combo">0</dd></div>
+          </dl>
+          <p class="unlock" id="done-unlock" hidden></p>
+          <p class="ending" id="done-ending" hidden>
+            The Overseer collapses. Your echoes hold for a moment, then fold back into you.
+            You are the last save.
+          </p>
+          <nav class="menu row">
+            <button type="button" data-action="next" id="done-next" class="menu-btn">Next</button>
+            <button type="button" data-action="retry" class="menu-btn">Retry</button>
+            <button type="button" data-action="select" class="menu-btn">Levels</button>
+          </nav>
+        </div>
+      </section>
+
+      <div id="hud">
+        <div id="card" hidden>
+          <p id="card-key">01</p>
+          <h2 id="card-name">THE BREACH</h2>
+          <p id="card-blurb"></p>
+        </div>
+        <div class="hud-top">
+          <div>
+            <p class="eyebrow">Objective</p>
+            <p id="hud-obj">Open the gate</p>
+          </div>
+          <p id="hud-time">00:00.00</p>
+          <div class="hud-score">
+            <p id="hud-score">0</p>
+            <p id="hud-combo"></p>
+          </div>
+        </div>
+        <p id="toast" hidden></p>
+        <div id="bossbar" hidden>
+          <div class="boss-meta"><span>OVERSEER</span><span id="boss-phase">PHASE 1</span></div>
+          <div class="boss-track"><span id="boss-fill"></span></div>
+        </div>
+        <div class="hud-bot">
+          <div class="rec">
+            <span id="rec-label">REC</span>
+            <span class="bar"><i id="rec-fill"></i></span>
+          </div>
+          <p id="echoes">ECHO 0/1</p>
+          <p id="shards">0/0</p>
+          <p id="pips"></p>
+          <p id="hint">Q ANCHOR · Z ECHO · X CLEAR</p>
+        </div>
+      </div>
+
+      <div id="touch" aria-hidden="true">
+        <div class="touch-left">
+          <button type="button" data-key="ArrowLeft">◀</button>
+          <button type="button" data-key="ArrowRight">▶</button>
+        </div>
+        <div class="touch-right">
+          <button type="button" data-key="KeyQ">Q</button>
+          <button type="button" data-key="KeyZ">Z</button>
+          <button type="button" data-key="KeyX">X</button>
+          <button type="button" data-key="ShiftLeft">DASH</button>
+          <button type="button" data-key="KeyJ">ATK</button>
+          <button type="button" data-key="Space">JUMP</button>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="js/main.js"></script>
+  </body>
+</html>
