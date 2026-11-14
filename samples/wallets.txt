@@ -1,0 +1,7 @@
+# Sample Solana wallets for smoke-testing the analyzer
+ED3PwgrF19HrotRBdazLPnZwrCQ7TrWuSqMBc5njqpuA
+FU2gBtN8zJqPoCKUMVQ1UfiZC64icPXeZtJmUafYbgeS
+BVWQSp66qvRyRD2Lq9cd5bvPGB93CyoCRJx6WBWxxRkj
+7Gc91ZMQToirfbFdyve2YJA4GQ5ZidTMxXJyPcbCAXsG
+6uJ6HotJEjGPeErYbBYo8PCJuXuw1xF5g2DrnD19yGBN
+HSSdoUJsbeUPa5DZAKVky9xijMEYYyzkrkbMWvBKrbKz
