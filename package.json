@@ -1,0 +1,36 @@
+{
+  "name": "ctrl-z-the-last-save",
+  "version": "0.1.0",
+  "description": "CLI to score Solana wallets by SPL first-buy hit rate (post-entry ATH ≥2x)",
+  "type": "module",
+  "bin": {
+    "wallet-analyzer": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "tsx src/index.ts",
+    "analyze": "tsx src/index.ts",
+    "test": "tsx --test src/**/*.test.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "solana",
+    "wallet",
+    "cli",
+    "helius",
+    "birdeye"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^13.1.0",
+    "dotenv": "^16.4.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2"
+  }
+}
